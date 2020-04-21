@@ -18,115 +18,78 @@ public class PalindromePerumtation
 
     public static void main(String args[])
     {
-        System.out.println(hasPalindromePermutation("kukaa"));
+        //test the method
+        System.out.println(isPalindromePermutation("abcadbc"));
     }
 
     /**
-    * Method uses isPalindrome method on all possible permutations to see if a given
-    *       string has a possible palindrome permutation
+    * Method attempts to remove all characters from a string (or all but 1 if length is odd)
+    * in order to see if the string has a possible palindrome permutation
+    * characters are removed in pairs because of the nature of a palindrome
     * @param s the string we are checking for palindrome permutations of
     * @return boolean value regarding if the string has a possible permutation palindrome or not
     */
-    public static Boolean hasPalindromePermutation(String s)
+    public static Boolean isPalindromePermutation(String s)
     {
-        //first check the initial string in order to avoid doing unnecessary stuff
-        if (isPalindrome(s))
+        char temp;
+        //Convert string to arraylist so we can iterate through and check for palindrome status
+        ArrayList<Character> arr = new ArrayList<Character>();
+        //Add all the elements to our new char arraylist
+        //ignore spaces since we are ignoring them when confirming palindrome status (see example)
+        for (char c : s.toCharArray())
+        {
+            if (c != ' ')
+            {
+                arr.add(c);
+            }
+        }
+
+        Boolean arrEven;
+
+        //Check if the string is even or odd
+        if (arr.size() % 2 == 0)
+        {
+            arrEven = true;
+        }
+        else
+        {
+            arrEven = false;
+        }
+
+        //Iterate through the list and remove the current element as well as one additional version of it
+        for (int i = 0; i < arr.size(); i++)
+        {
+            temp = arr.get(i);
+            //remove the occurrance of that character
+            arr.remove(new Character(temp));
+            //if something was not removed the second time then only 1 character exists of that type
+            if (!arr.contains(temp))
+            {
+                //readd that character in order to check at the end for size
+                arr.add(0, temp);
+            }
+            else
+            {
+                arr.remove(new Character(temp));
+                //if we remove an element we have to decrement the index to avoid the index incrementing
+                //if we don't do this then characters in the string will be skipped
+                i--;
+            }
+        }
+
+        //if the string was an odd length and there is only 1 character left then it has a palindrome permutation
+        if (!arrEven && arr.size() == 1)
         {
             return true;
         }
-
-        char temp;
-        //Make a list to store the already tested permutations
-        ArrayList<String> tested = new ArrayList<String>();
-        //original string is already tested
-        tested.add(s);
-        //Convert string to arraylist so we can iterate through and check for palindrome status
-        ArrayList<Character> arr = new ArrayList<Character>();
-        //Add all the elements to our new char arraylist
-        //ignore spaces since we are ignoring them when confirming palindrome status (see example)
-        for (char c : s.toCharArray())
+        else if (arrEven && arr.size() == 0)
         {
-            if (c != ' ')
-            {
-                arr.add(c);
-            }
+            //if the string size was even and there are no elements left then it has a palindrome permutation
+            return true;
         }
-
-        //convert current char arraylist to a string to store in tested arraylist
-        String test = arr.toString().substring(1, 3*arr.size()-1).replaceAll(", ", "");
-        tested.add(test);
-
-        //swap one character with another and check, if false swap back and try again with next index
-        for (int i = 0; i < arr.size(); i++)
+        else
         {
-            for (int j = 0; j < arr.size(); j++)
-            {
-                //if the elements are the same then we don't need to waste time testing
-                if (i == j)
-                {
-                    continue;
-                }
-
-                //Swap i index with current j index and then check if palindrome
-                temp = arr.get(j);
-                //set element i at index j
-                arr.set(j, arr.get(i));
-                //set element j at index i
-                arr.set(i, temp);
-                test = arr.toString().substring(1, 3*arr.size()-1).replaceAll(", ", "");
-                System.out.println(test);
-                //check to make sure we haven't tested already
-                if (!arr.contains(test))
-                {
-                    //if the one we test is a palindrome then return true for current program execution
-                    if (isPalindrome(test))
-                    {
-                        return true;
-                    }
-                    else //if not a palindrome, add tested string to the list of tested strings
-                    {
-                        tested.add(test);
-                        //reset the array so we can try another permutation of the string
-                        temp = arr.get(j);
-                        arr.set(j, arr.get(i));
-                        arr.set(i, temp);
-                    }
-                }
-            }
+            return false;
         }
-
-        return false;
-    }
-
-    /**
-    * Method checks if a string is a palindrome or not
-    * @param s the string we are checking the palindrome status of
-    * @return boolean value regarding if the string is a palindrome or not
-    */
-    public static Boolean isPalindrome(String s)
-    {
-        //Convert string to arraylist so we can iterate through and check for palindrome status
-        ArrayList<Character> arr = new ArrayList<Character>();
-        //Add all the elements to our new char arraylist
-        //ignore spaces since we are ignoring them when confirming palindrome status (see example)
-        for (char c : s.toCharArray())
-        {
-            if (c != ' ')
-            {
-                arr.add(c);
-            }
-        }
-
-        for (int i = 0, j = arr.size() - 1; i < j; i++, j--)
-        {
-            //if the two opposite indexed elements aren't the same character then
-            //its not a palindrome
-            if (arr.get(i) != arr.get(j))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
