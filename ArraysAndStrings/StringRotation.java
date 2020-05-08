@@ -17,12 +17,18 @@ public class StringRotation
         System.out.println(isRotation(s1, s2));
     }
 
+    /**
+    * Method checks if one string is another string with characters rotated
+    * @param s1 The original string
+    * @param s2 The second string we are checking rotation status of
+    * @return A boolean result representing if the strings are a rotation of each other or not
+    */
     public static Boolean isRotation(String s1, String s2)
     {
         //concatenate one string to itself, and then the original string should be in there
         //aka it should be a substring that can be checked
         //ex. erbottlewaterbottlewat is the concat of s2 to itself and contains s1
-        
+
         String strcat = s2;
         //This string should contain the original word, if there is a possible rotation
         strcat = strcat.concat(s2);
